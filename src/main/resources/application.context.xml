@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+		
+		
+	<bean id="DataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+	p:driverClassName="org.postgresql.Driver"	
+	p:url="jdbc:postgresql://localhost:5432/users"
+	p:username="postgres" p:password="postgres"/>
+        
+ 	
+	<!-- JDBC TEMPLATE -->
+	<bean id="JdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+	p:dataSource-ref="DataSource"/>
+	
+	<!-- TRANSACTION MANAGER PROGRAMATIC -->
+	<bean id="TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+ 	p:dataSource-ref="DataSource"/>	
+ 	
+	<bean id="UserBo" class="mx.any.example.rest.spring.bo.UserBo" 
+	p:userDao-ref="UserDao"
+	p:userDaoTrans-ref="UserDaoTrans" />
+	
+	<bean id="UserDao" class="mx.any.example.rest.spring.dao.impl.UserDaoImpl"
+	p:jdbcTemplate-ref="JdbcTemplate"/>
+	
+	<bean id="UserDaoTrans" class="mx.any.example.rest.spring.dao.impl.UserDaoTransImpl"
+	p:transactionManager-ref="TransactionManager"
+  	p:jdbcTemplate-ref="JdbcTemplate"/>
+  	
+	
+</beans>	
